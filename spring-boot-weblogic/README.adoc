@@ -1,0 +1,58 @@
+= Spring Boot Weblogic 12c
+
+Proof of concept to test Spring Boot app deployment in Weblogic 12.1.3.
+
+This PoC solves the issue 
+http://stackoverflow.com/questions/34525967/spring-boot-exception-could-not-open-servletcontext-resource-web-inf-dispatch[Spring Boot exception: Could not open ServletContext resource]
+
+== Setting up the build environment
+
+Clone this repository:
+
+[source,bash]
+----
+$ git clone https://github.com/DISID/disid-proofs.git
+
+# Check you have the spring-boot-weblogic project
+
+$ cd disid-proofs/spring-boot-weblogic
+----
+
+From this point forward we will refer to the _spring-boot-weblogic_ directory as `PROJECT_DIR`.
+
+Finally, import the `PROJECT_DIR` as "External Maven project" in STS 3.7.
+
+== Run Tests
+
+Web integration tests have been developed for testing purposes, take a look to
+_src/test/java_.
+
+To execute these tests just run JUnit from the STS or `mvn test` from
+your favorite shell.
+
+== Generate the WAR and deploy in Weblogic 12.1.3
+
+Generate the WAR:
+
+[source,bash]
+----
+$ cd PROJECT_DIR
+$ mvn clean compile war:war
+
+# The spring-boot-weblogic-0.1.0.war file should be in target/ dir
+----
+
+Then connect to WebLogic Server Administration Console 12c and deploy the WAR:
+
+. Click the Lock & Edit button
+. At _Domain Structure_, click on _base_domain/Deployments_ and press _Install_ button.
+. Follow the deployment process. Take in account you must upload the WAR file.
+. Press _Activate Changes_ button.
+. Finally go to _Control_ tab, select the _spring-boot-weblogic_ deployment and press _Start_ button.
+
+
+== Test deployed application
+
+Open the URL http://[WEBLOGIC_SERVER]/spring-boot-weblogic-0.1.0/ in your browser. You should see the home page that contains the link http://WEBLOGIC_SERVER/spring-boot-weblogic-0.1.0/accounts/1111[Show the 1111 Account].
+
+
